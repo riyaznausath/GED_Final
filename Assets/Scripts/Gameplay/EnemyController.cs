@@ -27,6 +27,8 @@ public class EnemyController : MonoBehaviour
     //States
     public float sightRange, attackRange;
     public bool playerInSightRange, playerInAttackRange;
+    GameObject temp;
+    GameObject enemy;
 
     private void Awake()
     {
@@ -36,6 +38,9 @@ public class EnemyController : MonoBehaviour
         // Enemy's components
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
+
+        
+
     }
 
     private void Update()
@@ -50,6 +55,34 @@ public class EnemyController : MonoBehaviour
         if (playerInSightRange && !playerInAttackRange) ChasePlayer();
         // Player in attack range, so attack!
         if (playerInAttackRange && playerInSightRange) AttackPlayer();
+
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            Debug.Log("all are dead");
+
+            
+          //  temp = Instantiate(enemy, new Vector3(xx, 1.56f, zz), transform.rotation);
+
+            foreach (GameObject obj2 in GameObject.FindGameObjectsWithTag("Enemy"))
+            {
+                float xx = Random.Range(-7, -11);
+                float zz = Random.Range(-2, 2);
+                Vector3 positionEnemy = new Vector3(xx, 1.56f, zz);
+
+                GameObject newEnemy = ObjectPooler.instance.getFromPool("Enemy", positionEnemy, Quaternion.identity);
+                temp = Instantiate(newEnemy, new Vector3(xx, 1.56f, zz), transform.rotation);
+                temp.GetComponent<EnemyController>().enabled = true;
+
+            }
+
+        }
+        // if (agent == null)
+        //{
+
+
+
+
+        //}
     }
 
     private void Patroling()

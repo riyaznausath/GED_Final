@@ -2,9 +2,31 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.IO;
+using System.Runtime.InteropServices;
+using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
+    // plugin dll imports
+    [DllImport("Plugin")]
+    private static extern int GetID();
+
+    [DllImport("Plugin")]
+    private static extern void SetID(int id);
+
+    [DllImport("Plugin")]
+    private static extern Vector3 GetPosition();
+
+    [DllImport("Plugin")]
+    private static extern void SetPosition(float x, float y, float z);
+
+    [DllImport("Plugin")]
+    private static extern float SetJump();
+
+
+
+
     // Player controller variables
     GameControls inputAction;
     Vector2 move;
@@ -64,9 +86,21 @@ public class PlayerController : MonoBehaviour
         // If player is on the ground, player can jump
         if(isGrounded)
         {
-            rb.velocity = new Vector2(rb.velocity.x, jump);
-            isGrounded = false;
+            if(Input.GetKey(KeyCode.LeftShift))
+            {
+
+                rb.velocity = new Vector2(rb.velocity.x, SetJump());
+                isGrounded = false;
+            }
+            else
+            {
+                rb.velocity = new Vector2(rb.velocity.x, jump);
+                isGrounded = false;
+            }
+
+           
         }
+
     }
 
     private void Attack()
